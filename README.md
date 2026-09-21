@@ -12,6 +12,10 @@ Add `kanas` to a URL to open Free Mode with only those kana selected:
 - `/kana/?kanas=きゃシュ` selects the two compounds きゃ and シュ, not their base kana.
 - `/kana/?kanas=` starts with nothing selected.
 
+Example preset:
+
+[https://returnrei.github.io/kana/?kanas=れねめぬまほひけケセンソシツロワタクフ](https://returnrei.github.io/kana/?kanas=れねめぬまほひけケセンソシツロワタクフ)
+
 Both literal kana and percent-encoded URLs work. Compounds are matched before
 single kana. Spaces or commas can separate items; duplicates and unsupported
 characters are ignored. Only kana represented on the board are supported.
@@ -27,3 +31,11 @@ normalization, empty selections, and individual overrides of group selections.
 ## Other infos
 
 Forked from: https://github.com/vedxyz/kana
+
+## Deployment
+
+Pages deploys on pushes to `main` that change app source (`src/`), static assets
+(`public/`), `index.html`, package manifests, Vite or TypeScript configuration,
+`.env*`, `.npmrc`, or the Pages workflow itself. README, documentation, tests, and
+CI-only changes do not trigger a deployment. Manual deployment remains available
+from the Pages workflow's **Run workflow** button in GitHub Actions.
