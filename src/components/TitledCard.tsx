@@ -9,18 +9,26 @@ export interface TitledCardProps {
   titleOrder?: 1 | 2 | 3 | 4 | 5 | 6;
   children: React.ReactNode;
   collapsible?: boolean;
+  defaultCollapsed?: boolean;
   titleActionElement?: JSX.Element;
 }
 
 const getStorageKeyForCollapse = (title: string) => `TitledCard-${title}-collapsed`;
-const getStoredStateForCollapse = (title: string): boolean => {
+const getStoredStateForCollapse = (title: string, defaultCollapsed: boolean): boolean => {
   const stateString = window.localStorage.getItem(getStorageKeyForCollapse(title));
-  if (stateString === null) return false;
+  if (stateString === null) return defaultCollapsed;
   return JSON.parse(stateString);
 };
 
-function TitledCard({ title, titleOrder = 1, children, collapsible = false, titleActionElement }: TitledCardProps) {
-  const [opened, { toggle }] = useDisclosure(collapsible ? !getStoredStateForCollapse(title) : true);
+function TitledCard({
+  title,
+  titleOrder = 1,
+  children,
+  collapsible = false,
+  defaultCollapsed = false,
+  titleActionElement,
+}: TitledCardProps) {
+  const [opened, { toggle }] = useDisclosure(collapsible ? !getStoredStateForCollapse(title, defaultCollapsed) : true);
   const opacity = opened ? 1 : 0.5;
 
   useEffect(() => {
