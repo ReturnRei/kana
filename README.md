@@ -15,7 +15,8 @@ Add `kanas` to a URL to open Free Mode with only those kana selected:
 Both literal kana and percent-encoded URLs work. Compounds are matched before
 single kana. Spaces or commas can separate items; duplicates and unsupported
 characters are ignored. Only kana represented on the board are supported.
-Without the parameter, the menu and Free Mode's default vowels are unchanged.
+Free Mode opens by default. Without the parameter, the five hiragana vowels are
+selected. Show correct answer starts unchecked; enable it in the options if wanted.
 
 ## Local checks
 

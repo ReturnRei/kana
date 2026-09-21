@@ -20,7 +20,7 @@ function FreePractice() {
   const [stats, setStats] = useState({ correctCount: 0, totalCount: 0 });
 
   const [options, setOptions] = useState(() => initialKanaSelection(window.location.search));
-  const [miscOptions, setMiscOptions] = useState<MiscPracticeOptions>({ showCorrectAnswer: true });
+  const [miscOptions, setMiscOptions] = useState<MiscPracticeOptions>({ showCorrectAnswer: false });
 
   const streamRef = useRef(buildSpacedRepetitionStream(options));
 
