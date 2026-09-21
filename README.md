@@ -23,3 +23,7 @@ selected. Show correct answer starts unchecked; enable it in the options if want
 Run `npm ci`, then `npm test`, `npm run lint`, and `npm run build`.
 The tests cover mixed scripts, every supported compound, URL encoding,
 normalization, empty selections, and individual overrides of group selections.
+
+## Other infos
+
+Forked from: https://github.com/vedxyz/kana
