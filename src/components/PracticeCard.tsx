@@ -36,7 +36,9 @@ const parentPage: Partial<Record<PracticeCardPages, PracticeCardPages>> = {
 };
 
 function PracticeCard() {
-  const [page, setPage] = useState<PracticeCardPages>("menu");
+  const [page, setPage] = useState<PracticeCardPages>(() =>
+    new URLSearchParams(window.location.search).has("kanas") ? "free" : "menu",
+  );
 
   const handlePageChange = (newPage: PracticeCardPages) => {
     setPage(newPage);

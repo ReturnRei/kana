@@ -1,14 +1,8 @@
 import { Container, Group, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useRef, useState } from "react";
-import {
-  getBaseKanaConfiguration,
-  getDefaultRomaji,
-  KanaConfiguration,
-  kanaConfigurationToMap,
-  kanaMapToArray,
-  spacedRepetitionStream,
-} from "../utilities/kana";
+import { getDefaultRomaji, KanaChars, kanaMap, spacedRepetitionStream } from "../utilities/kana";
+import { initialKanaSelection } from "../utilities/selection";
 import { tooltipProps } from "../utilities/tooltip";
 import FreePracticeOptions from "./FreePracticeOptions";
 import KanaAnswerTooltipHint from "./KanaAnswerTooltipHint";
@@ -17,23 +11,23 @@ import { MiscPracticeOptions } from "./PracticeCard";
 import PracticeKanaInput from "./PracticeKanaInput";
 import PracticeOptions from "./PracticeOptions";
 
-const buildSpacedRepetitionStream = (config: KanaConfiguration) => {
-  return spacedRepetitionStream(kanaMapToArray(kanaConfigurationToMap(config)));
-};
+const buildSpacedRepetitionStream = (selection: KanaChars[]) =>
+  selection.length ? spacedRepetitionStream(selection.map((kana) => ({ kana, romaji: kanaMap[kana] }))) : null;
 
 function FreePractice() {
-  const [openedOptions, { toggle: toggleOptions }] = useDisclosure(true);
+  const [openedOptions, { toggle: toggleOptions, open: openOptions }] = useDisclosure(true);
 
   const [stats, setStats] = useState({ correctCount: 0, totalCount: 0 });
 
-  const [options, setOptions] = useState(getBaseKanaConfiguration(true));
+  const [options, setOptions] = useState(() => initialKanaSelection(window.location.search));
   const [miscOptions, setMiscOptions] = useState<MiscPracticeOptions>({ showCorrectAnswer: true });
 
   const streamRef = useRef(buildSpacedRepetitionStream(options));
 
-  const [currentKana, setCurrentKana] = useState(streamRef.current.current());
+  const [currentKana, setCurrentKana] = useState(streamRef.current?.current() ?? null);
 
   const onAnswer = (correct: boolean) => {
+    if (!streamRef.current) return;
     setStats((prev) => ({
       correctCount: correct ? prev.correctCount + 1 : prev.correctCount,
       totalCount: prev.totalCount + 1,
@@ -44,16 +38,15 @@ function FreePractice() {
     }
     streamRef.current.next();
 
-    setCurrentKana(streamRef.current.current());
+    setCurrentKana(streamRef.current?.current() ?? null);
   };
 
   const handleOptionsChange = (newOptions: typeof options) => {
-    if (Object.values(newOptions).every((o) => !Object.values(o).includes(true)))
-      newOptions.hiragana.regular_vowel = true;
     setOptions(newOptions);
+    if (!newOptions.length) openOptions();
 
     streamRef.current = buildSpacedRepetitionStream(newOptions);
-    setCurrentKana(streamRef.current.current());
+    setCurrentKana(streamRef.current?.current() ?? null);
   };
 
   const handleMiscOptionsChange = (newOptions: typeof miscOptions) => {
@@ -62,11 +55,17 @@ function FreePractice() {
 
   return (
     <Container px={0}>
-      <PracticeKanaInput kana={currentKana} onAnswer={onAnswer} showCorrectAnswer={miscOptions.showCorrectAnswer} />
+      {currentKana ? (
+        <PracticeKanaInput kana={currentKana} onAnswer={onAnswer} showCorrectAnswer={miscOptions.showCorrectAnswer} />
+      ) : (
+        <Text>Select one or more kana below to start practicing.</Text>
+      )}
 
       <Group mt="md" position="apart" align="end">
         <Group>
-          <PlayKanaSoundButton key={getDefaultRomaji(currentKana.romaji)} romaji={currentKana.romaji} />
+          {currentKana && (
+            <PlayKanaSoundButton key={getDefaultRomaji(currentKana.romaji)} romaji={currentKana.romaji} />
+          )}
           <PracticeOptions.CollapseButton opened={openedOptions} onClick={toggleOptions} />
           <KanaAnswerTooltipHint />
         </Group>

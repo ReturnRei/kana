@@ -2,7 +2,7 @@ import { Button, Collapse, Container, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
 import { bruteForce, BruteForcePracticeStage } from "../utilities/bruteforce";
-import { KanaConfiguration, KanaNames } from "../utilities/kana";
+import { KanaConfiguration, KanaNames, KanaChars, kanaConfigurationToMap } from "../utilities/kana";
 import KanaBoard from "./KanaBoard";
 
 export interface BruteForcePracticeStageOptionProps {
@@ -60,9 +60,20 @@ function BruteForcePracticeStageOption({
       <Collapse in={opened}>
         {config && (
           <>
-            <KanaBoard kanaType={kanaType} options={config[kanaType]} onChange={mockOnChange} />
+            <KanaBoard
+              kanaType={kanaType}
+              selection={Object.keys(kanaConfigurationToMap(config)) as KanaChars[]}
+              individual={false}
+              onChange={mockOnChange}
+            />
             {stage.name === bruteForce.stages[bruteForce.stages.length - 1].name && (
-              <KanaBoard kanaType={kanaType} options={config[kanaType]} onChange={mockOnChange} combinations />
+              <KanaBoard
+                kanaType={kanaType}
+                selection={Object.keys(kanaConfigurationToMap(config)) as KanaChars[]}
+                individual={false}
+                onChange={mockOnChange}
+                combinations
+              />
             )}
           </>
         )}

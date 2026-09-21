@@ -1,20 +1,17 @@
 import React from "react";
 import KanaBoard from "./KanaBoard";
-import { KanaConfiguration, KanaNames } from "../utilities/kana";
+import { KanaChars } from "../utilities/kana";
 import { MiscPracticeOptions } from "./PracticeCard";
 import { Checkbox, Container, Title } from "@mantine/core";
 
 export interface FreePracticeOptionsProps {
-  options: KanaConfiguration;
+  options: KanaChars[];
   miscOptions: MiscPracticeOptions;
-  onChange: (options: KanaConfiguration) => void;
+  onChange: (options: KanaChars[]) => void;
   onMiscChange: (options: MiscPracticeOptions) => void;
 }
 
 function FreePracticeOptions({ options, miscOptions, onChange, onMiscChange }: FreePracticeOptionsProps) {
-  const makeChangeHandler = (kanaType: KanaNames) => (innerOptions: KanaConfiguration[keyof KanaConfiguration]) =>
-    onChange({ ...options, [kanaType]: innerOptions });
-
   return (
     <>
       <Container px={0} py="md">
@@ -36,10 +33,10 @@ function FreePracticeOptions({ options, miscOptions, onChange, onMiscChange }: F
       <Title order={6} mb="sm">
         Kana
       </Title>
-      <KanaBoard kanaType="hiragana" options={options.hiragana} onChange={makeChangeHandler("hiragana")} />
-      <KanaBoard kanaType="hiragana" options={options.hiragana} onChange={makeChangeHandler("hiragana")} combinations />
-      <KanaBoard kanaType="katakana" options={options.katakana} onChange={makeChangeHandler("katakana")} />
-      <KanaBoard kanaType="katakana" options={options.katakana} onChange={makeChangeHandler("katakana")} combinations />
+      <KanaBoard kanaType="hiragana" selection={options} onChange={onChange} />
+      <KanaBoard kanaType="hiragana" selection={options} onChange={onChange} combinations />
+      <KanaBoard kanaType="katakana" selection={options} onChange={onChange} />
+      <KanaBoard kanaType="katakana" selection={options} onChange={onChange} combinations />
     </>
   );
 }

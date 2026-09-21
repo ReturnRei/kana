@@ -11,8 +11,13 @@ document.onkeydown = (event) => {
 
   if (event.key.length > 1 && ["Backspace", "Enter"].every((allowedKey) => event.code !== allowedKey)) return;
 
-  // Not ideal
-  //if (["BUTTON", "INPUT"].some(allowedElement => document.activeElement?.tagName === allowedElement)) return;
+  // Let Enter/Space activate focused controls, including individual kana toggles.
+  if (
+    ["Enter", " "].includes(event.key) &&
+    event.target instanceof Element &&
+    event.target.closest("button, input, a, select, textarea")
+  )
+    return;
 
   const kanaInput = document.getElementById(PracticeKanaInput.kanaInputId);
   if (kanaInput) kanaInput.focus();
